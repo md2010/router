@@ -11,4 +11,19 @@ class Controller
     {
         echo "Hello! This is about page!";
     }
+
+    public function getByID($id)
+    {
+        	// ??
+    }
+
+    public function deleteIndex()
+    {
+        echo "Delete something";
+    }
+
+    public function postIndex()
+    {
+        echo "This is index page, POST method";
+    }
 }
