@@ -26,4 +26,9 @@ class Controller
     {
         echo "This is index page, POST method";
     }
+
+    public function putIndex()
+    {
+        echo "This is index page, PUT method";
+    }
 }

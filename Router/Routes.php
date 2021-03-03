@@ -16,5 +16,9 @@ class Routes
         "/index.php/" => 'Controller::deleteIndex'
     ];
 
+    public $put_routes = [
+        "/index.php/" => 'Controller::putIndex'
+    ];
+
 }
     

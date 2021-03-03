@@ -37,6 +37,11 @@ class Router
         call_user_func($this->routes->delete_routes[$this->request]);
     }
 
+    public function put()
+    {
+        call_user_func($this->routes->put_routes[$this->request]);
+    }
+
     public function dispatch()
     {
         $this->method = strtolower($_SERVER['REQUEST_METHOD']);
