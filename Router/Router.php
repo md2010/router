@@ -1,6 +1,7 @@
 <?php
 
 include_once 'Controller/Controller.php';
+include_once 'Request.php';
 require 'Routes.php'; 
 
 class Router 
@@ -8,7 +9,6 @@ class Router
     private $controller;
     private $routes;
     private $request;
-    private $method;
     private $httpMethods = [
         'get' => 'Router::get', 
         'post' => 'Router::post', 
@@ -19,36 +19,48 @@ class Router
     {
         $this->controller = new Controller();
         $this->routes = new Routes(); 
-        $this->request = $_SERVER['REQUEST_URI'];;   
+        $this->request = new Request();
     }
 
     public function get() 
     {   
-        call_user_func($this->routes->get_routes[$this->request]);
+        if (! array_key_exists($this->request->route(), $this->routes->get_routes)) {
+            echo "Route not found!";
+        }
+        call_user_func($this->routes->get_routes[$this->request->route()], $this->request->param());
     }
 
     public function post()
     {
-        call_user_func($this->routes->post_routes[$this->request]);
+        if (! array_key_exists($this->request->route(), $this->routes->post_routes)) {
+            echo "Route not found!";
+        }
+        call_user_func($this->routes->post_routes[$this->request->route()]);
     }
 
     public function delete()
     {
-        call_user_func($this->routes->delete_routes[$this->request]);
+        if (! array_key_exists($this->request->route(), $this->routes->delete_routes)) {
+            echo "Route not found!";
+        }
+        call_user_func($this->routes->delete_routes[$this->request->route()]);
     }
 
     public function put()
     {
-        call_user_func($this->routes->put_routes[$this->request]);
+        if (! array_key_exists($this->request->route(), $this->routes->put_routes)) {
+            echo "Route not found!";
+        }
+        call_user_func($this->routes->put_routes[$this->request->route()]);
     }
 
     public function dispatch()
     {
-        $this->method = strtolower($_SERVER['REQUEST_METHOD']);
-        if (! array_key_exists($this->method, $this->httpMethods)) {
+        if (! array_key_exists($this->request->method(), $this->httpMethods)) {
             echo "ERROR: HTTP method not supported!";
         }
-        call_user_func($this->httpMethods[$this->method]);
+        call_user_func($this->httpMethods[$this->request->method()], $this->request->param());
     }
+
    
 }

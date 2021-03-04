@@ -14,7 +14,7 @@ class Controller
 
     public function getByID($id)
     {
-        	// ??
+        	echo "I got param " .$id;
     }
 
     public function deleteIndex()
