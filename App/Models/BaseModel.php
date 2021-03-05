@@ -14,7 +14,7 @@ abstract class BaseModel
     protected $table;
     protected $primaryKey = 'id';
     protected $keyType = 'int';
-    protected $keyValue = 1;
+    protected $keyValue;
     public $exists = false;
     
     public function __construct (array $attributes = [])
@@ -65,14 +65,14 @@ abstract class BaseModel
         } 
     }
 
-    public function update($id) 
+    public function update($id) //za postojeći objekt
     {
         $sqlQuery = $this->columnsWithValues();
         $statement = $this->connection->prepare("UPDATE $this->table SET $sqlQuery WHERE id = $id");
         $statement->execute();  
     }
 
-    public function updateDB($values)
+    public function updateDB($values) //za novi objekt čiji su  podaci u bazi, ali nisu u attributes
     {
         $this->attributes = array_combine($this->attributes,$values);
         $this->update($values[0]);
@@ -159,7 +159,10 @@ abstract class BaseModel
 
     protected function setKeyValue()
     {
-        $this->keyValue = $this->connection->lastInsertId() + 1;
+        $statement = $this->connection->prepare("SELECT id FROM $this->table ORDER BY id DESC LIMIT 1");
+        $lastInsertID = $statement->execute();
+        var_dump($lastInsertID);
+        $this->keyValue = $lastInsertID + 1;
     }
 
     public function getKeyValue()
