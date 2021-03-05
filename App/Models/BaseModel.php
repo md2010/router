@@ -161,7 +161,6 @@ abstract class BaseModel
     {
         $statement = $this->connection->prepare("SELECT id FROM $this->table ORDER BY id DESC LIMIT 1");
         $lastInsertID = $statement->execute();
-        var_dump($lastInsertID);
         $this->keyValue = $lastInsertID + 1;
     }
 
