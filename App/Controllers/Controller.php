@@ -79,7 +79,7 @@ class Controller
     public function update() 
     {
         $car = new Car(); 
-        $values = [$_GET["id"], $_GET["name"], $_GET["model"], $_GET["year"]];
+        $values = [$_POST["id"], $_POST["name"], $_POST["model"], $_POST["year"]];
         $car->updateDB($values);
         self::edit($values[0]);
         header("Location: http://index.local/edit?".$values[0]);

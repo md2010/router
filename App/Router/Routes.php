@@ -13,12 +13,12 @@ class Routes
         "/post" => Controller::class.'::postIndex',
         "/edit" => Controller::class.'::edit',
         "/delete" => Controller::class.'::delete',
-        "/update" => Controller::class.'::update',
         "/deleteIndex" => Controller::class.'::deleteIndex'
     ]; 
 
     public $post_routes = [
-        "/postSave" => Controller::class.'::postSave'
+        "/postSave" => Controller::class.'::postSave',
+        "/update" => Controller::class.'::update',
     ];
 
     /* not supported!
