@@ -1,7 +1,10 @@
 <?php
 
-include_once 'Traits/HasAttributes.php';
-include_once 'Database/DBConnection.php';
+namespace App\Models;
+
+use App\Traits\HasAttributes;
+use Database\DBConnection;
+use PDO;
 
 abstract class BaseModel
 {
@@ -11,7 +14,7 @@ abstract class BaseModel
     protected $table;
     protected $primaryKey = 'id';
     protected $keyType = 'int';
-    protected $keyValue;
+    protected $keyValue = 1;
     public $exists = false;
     
     public function __construct (array $attributes = [])
@@ -37,6 +40,14 @@ abstract class BaseModel
         return $result; 
     }
 
+    public function getAll()
+    {
+        $statement = $this->connection->prepare("SELECT * FROM $this->table");
+        $statement->execute();
+        $result = $statement->fetchAll();
+        return $result; 
+    }
+
     public function save() 
     {
         $id = 'id';
@@ -46,8 +57,6 @@ abstract class BaseModel
                 $questionMarks = $this->makePlaceholder($values);
                 $statement = $this->connection->prepare("INSERT INTO $this->table VALUES (".$questionMarks. ")");
                 $statement->execute($values);     
-                echo "row inserted";
-                echo "<br>";
             } catch (PDO $e) {
                 echo "Error" . $e->getMessage();
             }
@@ -63,10 +72,14 @@ abstract class BaseModel
         $statement->execute();  
     }
 
+    public function updateDB($values)
+    {
+        $this->attributes = array_combine($this->attributes,$values);
+        $this->update($values[0]);
+    }
+
     public function columnsWithValues()
     {
-        // $query = http_build_query($this->attributes); //ne ostavlja navodnike kod stringa
-        // $sqlQuery = str_replace("&", ', ',$query);
         $keys = array_keys($this->attributes);
         $values = array_values($this->attributes);
         $sql = null;
@@ -84,7 +97,7 @@ abstract class BaseModel
         return $sql;
     }
 
-    public function delete($id)
+    public function delete($id) //delete from DB
     {
         $statement = $this->connection->prepare("DELETE FROM $this->table WHERE id = ?");
         $statement->execute([$id]);
@@ -112,7 +125,8 @@ abstract class BaseModel
 
     public function setTable()
     {
-        $this->table = get_class($this);
+        $obj = new \ReflectionClass(get_class($this));
+        $this->table = $obj->getShortName();
     }
 
     public function getTable()

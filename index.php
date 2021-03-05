@@ -1,11 +1,8 @@
 <?php
 
-$r = $_SERVER['REQUEST_URI'];
-//var_dump($r);
+require 'vendor/autoload.php';
 
-
-include_once 'Router/Router.php';
-include_once 'Router/Routes.php';
+use App\Router\Router;
 
 $router = new Router();
 $router->dispatch();

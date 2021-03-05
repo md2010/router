@@ -1,5 +1,7 @@
 <?php 
 
+namespace App\Router;
+
 class Request
 {
     private $request;

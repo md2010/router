@@ -1,8 +1,10 @@
 <?php
 
-include_once 'Controller/Controller.php';
-include_once 'Request.php';
-require 'Routes.php'; 
+namespace App\Router;
+
+use App\Controllers\Controller;
+use App\Router\Request;
+use App\Router\Routes;
 
 class Router 
 {
@@ -10,9 +12,10 @@ class Router
     private $routes;
     private $request;
     private $httpMethods = [
-        'get' => 'Router::get', 
-        'post' => 'Router::post', 
-        'delete' => 'Router::delete'
+        'get' => 'App\Router\Router::get', 
+        'post' => 'App\Router\Router::post', 
+        'delete' => 'App\Router\Router::delete',
+        'put' => 'App\Router\Router::put'
     ];
 
     public function __construct()
@@ -35,7 +38,7 @@ class Router
         if (! array_key_exists($this->request->route(), $this->routes->post_routes)) {
             echo "Route not found!";
         }
-        call_user_func($this->routes->post_routes[$this->request->route()]);
+        call_user_func($this->routes->post_routes[$this->request->route()], $this->request->param());
     }
 
     public function delete()
@@ -43,7 +46,7 @@ class Router
         if (! array_key_exists($this->request->route(), $this->routes->delete_routes)) {
             echo "Route not found!";
         }
-        call_user_func($this->routes->delete_routes[$this->request->route()]);
+        call_user_func($this->routes->delete_routes[$this->request->route()], $this->request->param());
     }
 
     public function put()
@@ -51,7 +54,7 @@ class Router
         if (! array_key_exists($this->request->route(), $this->routes->put_routes)) {
             echo "Route not found!";
         }
-        call_user_func($this->routes->put_routes[$this->request->route()]);
+        call_user_func($this->routes->put_routes[$this->request->route()], $this->request->param());
     }
 
     public function dispatch()

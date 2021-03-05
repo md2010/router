@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Models;
+
 include_once 'BaseModel.php';
 
 class Plane extends BaseModel 

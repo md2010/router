@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset=utf-8">
+    <title>Twig POST</title>
+</head>
+<body>
+    <form method="get" action="deleteIndex">
+        <label> ID: </label> <br>
+        <textarea name="id"> {{ id }} </textarea> 
+        <br>
+        <label> Name: </label> <br>
+        <textarea name="name"> {{ name }} </textarea>
+        <br>
+        <label> Model: </label> <br>
+        <textarea name="model"> {{ model }} </textarea>
+        <br>
+        <label> Year: </label> <br>
+        <textarea name="year"> {{ year }} </textarea>
+        <input class="btn btn-success" name="submit" type="submit" value="Delete">
+    </form>
+</body>
+</html>
+
