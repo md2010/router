@@ -80,7 +80,8 @@ class Controller
     {
         $car = new Car(); 
         $values = [$_POST["id"], $_POST["name"], $_POST["model"], $_POST["year"]];
-        $car->updateDB($values);
+        $car->create($values);
+        $car->save();
         self::edit($values[0]);
         header("Location: http://index.local/edit?".$values[0]);
     }
