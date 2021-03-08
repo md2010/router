@@ -27,8 +27,10 @@ abstract class BaseModel
 
     public function create(array $values = []) 
     {   
-        $this->setKeyValue();
-        array_unshift($values, $this->keyValue);
+        if(sizeof($values) != sizeof($this->attributes)) {
+            $this->setKeyValue();
+            array_unshift($values, $this->keyValue);
+        } 
         $this->attributes = array_combine($this->attributes,$values);
     }
 
@@ -50,9 +52,8 @@ abstract class BaseModel
 
     public function save() 
     {
-        $id = 'id';
-        $values = array_values($this->attributes);
-        if (! $this->getByID($values[0])) {
+       $values = array_values($this->attributes);
+        if (! $this->getByID($this->id)) {
             try {
                 $questionMarks = $this->makePlaceholder($values);
                 $statement = $this->connection->prepare("INSERT INTO $this->table VALUES (".$questionMarks. ")");
@@ -61,7 +62,7 @@ abstract class BaseModel
                 echo "Error" . $e->getMessage();
             }
         } else { 
-            $this->update($id);
+            $this->update($this->id);
         } 
     }
 
@@ -70,12 +71,6 @@ abstract class BaseModel
         $sqlQuery = $this->columnsWithValues();
         $statement = $this->connection->prepare("UPDATE $this->table SET $sqlQuery WHERE id = $id");
         $statement->execute();  
-    }
-
-    public function updateDB($values) //za novi objekt čiji su  podaci u bazi, ali nisu u attributes
-    {
-        $this->attributes = array_combine($this->attributes,$values);
-        $this->update($values[0]);
     }
 
     public function columnsWithValues()
@@ -159,9 +154,9 @@ abstract class BaseModel
 
     protected function setKeyValue()
     {
-        $statement = $this->connection->prepare("SELECT id FROM $this->table ORDER BY id DESC LIMIT 1");
-        $lastInsertID = $statement->execute();
-        $this->keyValue = $lastInsertID + 1;
+        $ids = $this->connection->query("SELECT id FROM $this->table ORDER BY id DESC LIMIT 1");
+        $lastInsertID = $ids->fetchColumn();
+        $this->keyValue = intval($lastInsertID + 1);
     }
 
     public function getKeyValue()
